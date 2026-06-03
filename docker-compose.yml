@@ -1,0 +1,47 @@
+version: '3.9'
+services:
+  auth-service:
+    build: ./auth-service
+    ports:
+      - '8001:8001'
+    environment:
+      - JWT_SECRET=supersecret123
+      - DB_PATH=/app/data/auth.db
+    volumes:
+      - ./auth-service/data:/app/data
+
+  management-service:
+    build: ./management-service
+    ports:
+      - '8002:8002'
+    environment:
+      - JWT_SECRET=supersecret123
+      - DB_PATH=/app/data/management.db
+    volumes:
+      - ./management-service/data:/app/data
+
+  reservation-service:
+    build: ./reservation-service
+    ports:
+      - '8003:8003'
+    environment:
+      - JWT_SECRET=supersecret123
+      - MANAGEMENT_URL=http://management-service:8002
+      - DB_PATH=/app/data/reservations.db
+    depends_on:
+      - management-service
+    volumes:
+      - ./reservation-service/data:/app/data
+
+  frontend:
+    build: ./frontend
+    ports:
+      - '3000:3000'
+    environment:
+      - NEXT_PUBLIC_AUTH_URL=http://localhost:8001
+      - NEXT_PUBLIC_MANAGEMENT_URL=http://localhost:8002
+      - NEXT_PUBLIC_RESERVATION_URL=http://localhost:8003
+    depends_on:
+      - auth-service
+      - management-service
+      - reservation-service
