@@ -1,0 +1,14 @@
+{
+  "name": "management-service",
+  "version": "1.0.0",
+  "description": "Gestión de espacios, facturación y reportes",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "express": "^4.18.4",
+    "jsonwebtoken": "^9.0.2",
+    "sqlite3": "^5.1.6"
+  }
+}
